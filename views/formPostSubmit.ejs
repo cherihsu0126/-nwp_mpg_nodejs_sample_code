@@ -76,23 +76,23 @@ module.exports = {
         <div style="display:flex; justify-content: center;">
             <form action="https://ccore.newebpay.com/MPG/mpg_gateway" method="post" style="width: 50%; margin-top:30px;">
                 <h3 class="text_center">加密後交易測試範例</h3>
-                <h4 class="text_center required">※ 為Form POST必傳送項目</h4>
+                <h4 class="text_center" style="color: red;">※ 為Form POST必傳送項目</h4>
                 <table style="width:100%;">
                     <tr>
-                        <td style="width:30%;">商店代號：</td>
-                        <td style="width:70%;"><input name="MerchantID" maxlength="15" readonly required><span class="required">※必填</span></td>
+                        <td class="required" style="width:30%;">商店代號：</td>
+                        <td style="width:70%;"><input name="MerchantID" maxlength="15" readonly required></td>
                     </tr>
                     <tr>
-                        <td style="width:30%;">串接程式版本：</td>
-                        <td style="width:70%;"><input name="Version" maxlength="5" readonly required><span class="required">※必填</span></td>
+                        <td class="required" style="width:30%;">串接程式版本：</td>
+                        <td style="width:70%;"><input name="Version" maxlength="5" readonly required></td>
                     </tr>
                     <tr>
-                        <td style="width:30%;">加密交易內容：</td>
-                        <td style="width:70%;"><textarea name="TradeInfo" rows="12" readonly required></textarea><span class="required">※必填</span></td>
+                        <td class="required" style="width:30%;">加密交易內容：</td>
+                        <td style="width:70%;"><textarea name="TradeInfo" rows="12" readonly required></textarea></td>
                     </tr>
                     <tr>
-                        <td style="width:30%;">加密壓碼內容：</td>
-                        <td style="width:70%;"><textarea name="TradeSha" rows="2" readonly required></textarea><span class="required">※必填</span></td>
+                        <td class="required" style="width:30%;">加密壓碼內容：</td>
+                        <td style="width:70%;"><textarea name="TradeSha" rows="2" readonly required></textarea></td>
                     </tr>
                 </table>
 
