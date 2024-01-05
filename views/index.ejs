@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link rel="stylesheet" href="./../public/stylesheets/main.css" />
+    <script type="text/javascript" src="./../public/javascripts/viewPlugin/axios.min.js"></script>
+    <style>
+        .aside {
+            width:22%;
+            float:left;
+            background-color: #225b95;
+            color: white;
+            padding: 15px 0;
+        }
+        label{
+            padding: 15px 30px 5px 55px;
+        }
+        #formRef{
+            width:78%; 
+            float:left;
+        }
+        .paywayDiv{
+            display: none;
+        }
+        #selectName{
+            color:#225b95;
+            width: 80%;
+            margin-top: 28px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h2>
+          <%= title %>
+        </h2>
+        <a href="https://www.newebpay.com/website/Page/download_file?name=Online Payment-Foreground Scenario API Specification_NDNF-1.0.9.pdf" target="_blank" style="margin-left:20px;">線上交易─幕前支付技術串接手冊_NDNF-1.0.9&nbsp;文件下載</a>
+    </div>
+
+    <div class="aside">
+        <div>
+            <h4 style="margin-left: 36px;">支付方式</h4>
+            <label class="block"><input type="radio" name="payway" value="baseParam"> 不指定支付方式(依設定)</label>
+            <label class="block"><input type="radio" name="payway" value="creditParam"> 信用卡一次付清</label>
+            <label class="block"><input type="radio" name="payway" value="instParam"> 信用卡分期付款</label>
+            <label class="block"><input type="radio" name="payway" value="unionParam"> 銀聯卡交易</label>
+            <label class="block"><input type="radio" name="payway" value="androidParam"> Google Pay交易</label>
+            <label class="block"><input type="radio" name="payway" value="samsungParam"> Samsung Pay交易</label>
+            <label class="block"><input type="radio" name="payway" value="ntcbParam"> 國民旅遊卡</label>
+            <label class="block"><input type="radio" name="payway" value="webatmParam"> WebATM交易</label>
+            <label class="block"><input type="radio" name="payway" value="cvsParam"> 超商代碼繳費</label>
+            <label class="block"><input type="radio" name="payway" value="barcodeParam"> 超商條碼繳費交易</label>
+            <label class="block"><input type="radio" name="payway" value="ezCrossParam"> 跨境支付（Alipay / Wechat）</label>
+            <label class="block"><input type="radio" name="payway" value="ezpayParam"> 簡單付電子錢包</label>
+            <label class="block"><input type="radio" name="payway" value="linepayParam"> LINE Pay 交易</label>
+            <label class="block"><input type="radio" name="payway" value="esunParam"> 玉山Wallet 交易</label>
+            <label class="block"><input type="radio" name="payway" value="taiwanParam"> 台灣Pay 支付交易</label>
+            <label class="block"><input type="radio" name="payway" value="lgsParam"> 超商取貨付款交易流程（含B2C大宗寄倉物流）</label>
+        </div>
+    </div>
+    
+    <div class="main">
+        <form id="formRef">
+            <h3 id="selectName" class="text_center"><!-- append --></h3>
+            <!-- ------------------------------------ 基本參數 = 不指定支付方式(依設定) ------------------------------------ -->
+            <table id="baseParam" style="width:100%;">
+                <tr>
+                    <td></td>
+                    <td><h4 class="text_left">各支付基本項目 <span style="color:red;">※ 為必填欄位</span></h4></td>
+                </tr>
+                <tr>
+                    <td class="required" style="width:20%;">API網址：</td>
+                    <td style="width:80%;"><input name="url" size="60" required></td>
+                </tr>
+                <tr>
+                    <td class="required">商店代號：</td>
+                    <td><input name="MerchantID" maxlength="15" required></td>
+                </tr>
+                <tr>
+                    <td class="required">key：</td>
+                    <td><input name="key" size="32" required></td>
+                </tr>
+                <tr>
+                    <td class="required">iv：</td>
+                    <td><input name="iv" minlength="16" maxlength="16" required></td>
+                </tr>
+                <tr>
+                    <td class="required">串接程式版本：</td>
+                    <td><input name="Version" maxlength="5" required></td>
+                </tr>
+                <tr>
+                    <td class="required">回傳格式：</td>
+                    <td><input name="RespondType" maxlength="5" required></td>
+                </tr>
+                <tr>
+                    <td class="required">藍新金流會員：</td>
+                    <td><input name="LoginType" type="number" max="9" required></td>
+                </tr>
+                <tr>
+                    <td class="required">時間戮記：</td>
+                    <td><input name="TimeStamp" maxlength="50" required readonly placeholder="此範例由程式自動產出"></td>
+                </tr>
+                <tr>
+                    <td class="required">商店訂單編號：</td>
+                    <td><input name="MerchantOrderNo" maxlength="30" required readonly placeholder="此範例由程式自動產出"></td>
+                </tr>
+                <tr>
+                    <td class="required">商品資訊：</td>
+                    <td><input name="ItemDesc" maxlength="50" required></td>
+                </tr>
+                <tr>
+                    <td class="required">訂單金額：</td>
+                    <td><input name="Amt" type="number" min="0" max="9999999999" required></td>
+                </tr>
+                <tr>
+                    <td class="required">付款人電子信箱：</td>
+                    <td><input name="Email" maxlength="50" required></td>
+                </tr>
+                <tr>
+                    <td>支付完成返回商店網址：(選填)</td>
+                    <td><input name="ReturnURL" maxlength="60" size="60"></td>
+                </tr>
+                <tr>
+                    <td>支付通知網址：(選填)</td>
+                    <td><input name="NotifyURL" maxlength="60" size="60"></td>
+                </tr>
+                <tr>
+                    <td>商店取號網址：(選填)</td>
+                    <td><input name="CustomerURL" maxlength="60" size="60"></td>
+                </tr>
+                <tr>
+                    <td>返回商店網址：(選填)</td>
+                    <td><input name="ClientBackURL" maxlength="60" size="60"></td>
+                </tr>
+                <tr>
+                    <td>加密模式：(選填)</td>
+                    <td><input name="EncryptType" type="number" min="0" max="9" readonly></td>
+                </tr>
+            </table>
+        
+            <table id="creditParam" class="paywayDiv" style="width:100%;">
+                <tr>
+                    <td></td>
+                    <td class="text_left" colspan="2"><h4>信用卡一次付清  <span style="color: red;">必填項目</h4></td>
+                </tr>
+                <tr>
+                <td class="required" style="width:20%;">信用卡一次付清啟用：</td>
+                <td style="width:80%;"><input name="CREDIT" type="number" min="0" max="1" required></td>
+                </tr>
+            </table>
+        
+            <table id="instParam" class="paywayDiv" style="width:100%;">
+                <tr>
+                    <td></td>
+                    <td class="text_left" colspan="2"><h4>信用卡分期付款  <span style="color: red;">必填項目</span></h4></td>
+                </tr>
+                <tr>
+                <td class="required" style="width:20%;">信用卡分期付款啟用：</td>
+                <td style="width:80%;"><input name="InstFlag" type="number" max="9" required></td>
+                </tr>
+            </table>
+        
+            <table id="unionParam" class="paywayDiv" style="width:100%;">
+                <tr>
+                    <td></td>
+                    <td class="text_left" colspan="2"><h4>銀聯卡交易  <span style="color: red;">必填項目</span></h4></td>
+                </tr>
+                <tr>
+                <td class="required" style="width:20%;">銀聯卡啟用：</td>
+                <td style="width:80%;"><input name="UNIONPAY" type="number" max="9" required></td>
+                </tr>
+            </table>
+        
+            <table id="androidParam" class="paywayDiv" style="width:100%;">
+                <tr>
+                    <td></td>
+                    <td class="text_left" colspan="2"><h4>Google Pay交易  <span style="color: red;">必填項目</span></h4></td>
+                </tr>
+                <tr>
+                <td class="required" style="width:20%;">Google Pay啟用：</td>
+                <td style="width:80%;"><input name="ANDROIDPAY" type="number" max="9" required></td>
+                </tr>
+            </table>
+        
+            <table id="samsungParam" class="paywayDiv" style="width:100%;">
+                <tr>
+                    <td></td>
+                    <td class="text_left" colspan="2"><h4>Samsung Pay交易  <span style="color: red;">必填項目</span></h4></td>
+                </tr>
+                <tr>
+                <td class="required" style="width:20%;">Samsung Pay啟用：</td>
+                <td style="width:80%;"><input name="SAMSUNGPAY" type="number" max="9" required></td>
+                </tr>
+            </table>
+        
+            <table id="ntcbParam" class="paywayDiv" style="width:100%;">
+                <tr>
+                    <td></td>
+                    <td class="text_left" colspan="2"><h4>國民旅遊卡  <span style="color: red;">必填項目</span></h4></td>
+                </tr>
+                <tr>
+                <td class="required" style="width:20%;">信用卡一次付清啟用：</td>
+                <td style="width:80%;"><input name="CREDIT" type="number" value="1" min="0" max="1" required></td>
+                </tr>
+                <tr>
+                    <td class="required">國民旅遊卡交易註記：</td>
+                    <td><input name="NTCB" type="number" max="9" required></td>
+                </tr>
+                <tr>
+                    <td class="required">旅遊地區代號：</td>
+                    <td><input name="NTCBLocate" maxlength="3" required></td>
+                </tr>
+                <tr>
+                    <td class="required">國民旅遊卡起始日期：</td>
+                    <td><input name="NTCBStartDate" type="date" required></td>
+                </tr>
+                <tr>
+                    <td class="required">國民旅遊卡結束日期：</td>
+                    <td><input name="NTCBEndDate" type="date" required></td>
+                </tr>
+            </table>
+        
+            <table id="webatmParam" class="paywayDiv" style="width:100%;">
+                <tr>
+                    <td></td>
+                    <td class="text_left" colspan="2"><h4>WebATM交易  <span style="color: red;">必填項目</span></h4></td>
+                </tr>
+                <tr>
+                <td class="required" style="width:20%;">WEBATM 啟用：</td>
+                <td style="width:80%;"><input name="WEBATM" type="number" max="9" required></td>
+                </tr>
+            </table>
+        
+            <table id="cvsParam" class="paywayDiv" style="width:100%;">
+                <tr>
+                    <td></td>
+                    <td class="text_left" colspan="2"><h4>超商代碼繳費  <span style="color: red;">必填項目</span></h4></td>
+                </tr>
+                <tr>
+                <td class="required" style="width:20%;">超商代碼繳費啟用：</td>
+                <td style="width:80%;"><input name="CVS" type="number" max="9" required></td>
+                </tr>
+            </table>
+        
+            <table id="barcodeParam" class="paywayDiv" style="width:100%;">
+                <tr>
+                    <td></td>
+                    <td class="text_left" colspan="2"><h4>超商條碼繳費交易  <span style="color: red;">必填項目</span></h4></td>
+                </tr>
+                <tr>
+                <td class="required" style="width:20%;">超商條碼繳費啟用：</td>
+                <td style="width:80%;"><input name="BARCODE" type="number" max="9" required></td>
+                </tr>
+            </table>
+        
+            <table id="ezCrossParam" class="paywayDiv" style="width:100%;">
+                <tr>
+                    <td></td>
+                    <td class="text_left" colspan="2"><h4>跨境支付(Alipay/Wechat)  <span style="color: red;">必填項目</span></h4></td>
+                </tr>
+                <tr>
+                    <td  class="required" td style="width:20%;">簡單付微信支付：</td>
+                    <td style="width:80%;"><input name="EZPWECHAT" type="number" max="9" required></td>
+                </tr>
+                <tr>
+                    <td class="required">簡單付支付寶：</td>
+                    <td><input name="EZPALIPAY" type="number" max="9" required></td>
+                </tr>
+            </table>
+        
+            <table id="ezpayParam" class="paywayDiv" style="width:100%;">
+                <tr>
+                    <td></td>
+                    <td class="text_left" colspan="2"><h4>簡單付電子錢包  <span style="color: red;">必填項目</span></h4></td>
+                </tr>
+                <tr>
+                    <td class="required" style="width:20%;">簡單付電子錢包：</td>
+                    <td style="width:80%;"><input name="EZPAY" type="number" max="9" required></td>
+                </tr>
+            </table>
+        
+            <table id="linepayParam" class="paywayDiv" style="width:100%;">
+                <tr>
+                    <td></td>
+                    <td class="text_left" colspan="2"><h4>LINE Pay 交易  <span style="color: red;">必填項目</span></h4></td>
+                </tr>
+                <tr>
+                <td class="required" style="width:20%;">LINE Pay：</td>
+                <td style="width:80%;"><input name="LINEPAY" type="number" max="9" required></td>
+                </tr>
+            </table>
+        
+            <table id="esunParam" class="paywayDiv" style="width:100%;">
+                <tr>
+                    <td></td>
+                    <td class="text_left" colspan="2"><h4>玉山Wallet 交易  <span style="color: red;">必填項目</span></h4></td>
+                </tr>
+                <tr>
+                <td class="required" style="width:20%;">玉山 Wallet：</td>
+                <td style="width:80%;"><input name="ESUNWALLET" type="number" max="9" required></td>
+                </tr>
+            </table>
+        
+            <table id="taiwanParam" class="paywayDiv" style="width:100%;">
+                <tr>
+                    <td></td>
+                    <td class="text_left" colspan="2"><h4>台灣Pay 交易  <span style="color: red;">必填項目</span></h4></td>
+                </tr>
+                <tr>
+                <td class="required" style="width:20%;">台灣 Pay：</td>
+                <td style="width:80%;"><input name="TAIWANPAY" type="number" value="totalParam.TAIWANPAY" max="9" required></td>
+                </tr>
+            </table>
+        
+            <table id="lgsParam" class="paywayDiv" style="width:100%;">
+                <tr>
+                    <td></td>
+                    <td class="text_left" colspan="2" style="width:100%;"><h4>超商取貨付款交易流程（含B2C大宗寄倉物流）  <span style="color:red">必填項目</span></h4></td>
+                </tr>
+                <tr>
+                    <td class="required" style="width:20%;">信用卡一次付清啟用：</td>
+                    <td style="width:80%;"><input name="CREDIT" type="number" value="1" min="0" max="1" required></td>
+                </tr>
+                <tr>
+                    <td class="required">物流啟用：</td>
+                    <td><input type="number" name="CVSCOM" max="9" required><span class="required">※必填, 1=啟用超商取貨不付款 | 2=啟用超商取貨付款 | 3=啟用超商取貨不付款及超商取貨付款 | 0或者未有此參數，即代表不開啟</span></td>
+                </tr>
+                <tr>
+                    <td class="required">物流型態：</td>
+                    <td><input name="LgsType" maxlength="3" required><span class="required">※必填, B2C＝大宗寄倉(目前僅支援 7-ELEVEN) | C2C＝店到店(支援 7-ELEVEN、全家、萊爾富、OK mart) , 詳細請看串接文件</span></td>
+                </tr>
+            </table>
+
+            <table style="width:100%;">
+                <tr>
+                    <td style="width:20%;"></td>
+                    <td style="width:80%;">
+                        <input id="sendBtn" type="submit" value="參數轉換" onclick="createOrder()">
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div class="footer">© 2024 Neweb Technologies Co., Ltd.</div>
+
+    <script>
+        const host = '<%= Host %>';
+        //基本參數預設值
+        const baseParam = { //各支付基本參數 = 不指定支付方式(依設定)
+            url: 'https://ccore.newebpay.com/MPG/mpg_gateway',//藍新MPG交易 API串接網址
+            MerchantID: '<%= MerchantID %>', //商店代號 給藍新必填欄位 參數名不可變動
+            key: '<%= HASHKEY %>',
+            iv: '<%= HASHIV %>',
+            Version: '2.0',                  //串接版本號
+            RespondType: 'JSON',             //回傳格式
+            LoginType: '0',                  //是否須要登入藍新金流會員
+            TimeStamp: '',                   //時間戳記
+            MerchantOrderNo: '',             //商店訂單編號
+            ItemDesc: 'Chelly商品資訊',       //商品資訊
+            Amt: '100',                      //訂單金額
+            Email: 'test@gmail.com',         //付款人信箱
+            ReturnURL: '<%= ReturnURL %>',   //支付完成 返回商店網址
+            NotifyURL: '<%= NotifyURL %>',   //支付通知網址
+            EncryptType: 0,                  //加密模式 AES256方式加密參帶0, AES GCM方式加密帶1
+        };
+        Object.keys(baseParam).forEach(item => {
+            document.querySelectorAll(`input[name="${item}"]`)[0].value = baseParam[item];
+        })
+        let totalParam = {...baseParam} //init default
+        //init default checked
+        document.addEventListener('DOMContentLoaded', function() {
+            const basePayway = document.querySelectorAll('input[name="payway"][value="baseParam"]')[0]
+            basePayway.checked = true;
+            basePayway.dispatchEvent(new Event('change')); //trigger
+        });
+
+        //各支付預設
+        function updateSelectedPayway(option) {
+            switch (option){
+                case 'baseParam': //不指定支付方式(依設定)
+                    totalParam = {...baseParam}
+                    break;
+                case 'creditParam': // 信用卡一次付清
+                    totalParam = {
+                        ...baseParam,
+                        CREDIT: 1 
+                    }
+                    break;
+                case 'instParam': // 信用卡分期付款
+                    totalParam = {
+                        ...baseParam,
+                        InstFlag: 1
+                    }
+                    break;
+                case 'unionParam': // 銀聯卡交易
+                    totalParam = {
+                        ...baseParam,
+                        UNIONPAY: 1
+                    }
+                    break;
+                case 'androidParam': // Google Pay交易
+                    totalParam = {
+                        ...baseParam,
+                        ANDROIDPAY: 1
+                    }
+                    break;
+                case 'samsungParam': // Samsung Pay交易
+                    totalParam = {
+                        ...baseParam,
+                        SAMSUNGPAY: 1
+                    }
+                    break;
+                case 'ntcbParam': // 國民旅遊卡
+                    totalParam = {
+                        ...baseParam,
+                        CREDIT: 1, //信用卡一次付清需啟用
+                        NTCB: 1, //國民旅遊卡交易註記
+                        NTCBLocate: '001', //旅遊地區代號: 參考旅遊地區代號對照表
+                        NTCBStartDate: '', //國民旅遊卡起始日期
+                        NTCBEndDate: '', //國民旅遊卡結束日期
+                    }
+                    break;
+                case 'webatmParam': // WebATM交易
+                    totalParam = {
+                        ...baseParam,
+                        WEBATM: 1
+                    }
+                    break;
+                case 'cvsParam': // 超商代碼繳費
+                    totalParam = {
+                        ...baseParam,
+                        CVS: 1
+                    }
+                    break;
+                case 'barcodeParam': // 超商條碼繳費交易
+                    totalParam = {
+                        ...baseParam,
+                        BARCODE: 1
+                    }
+                    break;
+                case 'ezCrossParam': // 跨境支付(Alipay/Wechat)
+                    totalParam = {
+                        ...baseParam,
+                        EZPWECHAT: 1, //簡單付微信支付
+                        EZPALIPAY: 1  //簡單付支付寶
+                    }
+                    break;
+                case 'ezpayParam': // 簡單付電子錢包
+                    totalParam = {
+                        ...baseParam,
+                        EZPAY: 1,
+                    }
+                    break;
+                case 'linepayParam': // LINE Pay 交易
+                    totalParam = {
+                        ...baseParam,
+                        LINEPAY: 1,
+                    }
+                    break;
+                case 'esunParam': // 玉山Wallet 交易
+                    totalParam = {
+                        ...baseParam,
+                        ESUNWALLET: 1,
+                    }
+                    break;
+                case 'taiwanParam': // 台灣Pay 支付交易
+                    totalParam = {
+                        ...baseParam,
+                        TAIWANPAY: 1,
+                    }
+                    break;
+                case 'lgsParam': // 超商取貨付款交易流程（含B2C大宗寄倉物流）
+                    totalParam = {
+                        ...baseParam,
+                        CREDIT: 1,      //信用卡一次付清需設定 啟用=1
+                        CVSCOM: 3,      //物流啟用: 店到店 1=啟用超商取貨不付款 | 2=啟用超商取貨付款 | 3=啟用超商取貨不付款及超商取貨付款 | 0或者未有此參數，即代表不開啟
+                        LgsType: 'C2C'  //物流型態: B2C＝大宗寄倉(目前僅支援 7-ELEVEN) | C2C＝店到店(支援 7-ELEVEN、全家、萊爾富、OK mart) 
+                    }
+                    break;
+            }
+            Object.keys(totalParam).forEach(item => {
+                let div = document.querySelectorAll(`input[name="${item}"]`)
+                for(let i=0; div.length > i; i++ ){
+                    div[i].value = totalParam[item];
+                }
+            })
+            // console.log('totalParam',totalParam)
+        };
+
+        // 選擇支付方式
+        const paywayDiv = document.querySelectorAll('input[name="payway"]')
+        paywayDiv.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.checked) {
+                    let selectVal = this.value
+                    console.log("選擇支付方式", selectVal);
+                    // init
+                    document.querySelectorAll('[class="paywayDiv"]').forEach(div => {
+                        div.style.display = 'none';
+                    });
+
+                    // show payway param div
+                    const paywayDivID = document.getElementById(selectVal);
+                    if (paywayDivID) {
+                        paywayDivID.style.display = 'inline-table';
+                    }
+                    
+                    //show selected text
+                    document.getElementById('selectName').textContent = this.nextSibling.textContent.trim()
+                    updateSelectedPayway(selectVal)
+                }
+            });
+        });
+
+
+
+
+        document.getElementById('formRef').addEventListener('input', function(e) {
+            if (e.target.tagName === 'INPUT') {
+                totalParam[e.target.name] = e.target.value;
+            }
+        });
+
+        async function createOrder() {
+            // validate
+            var form = document.getElementById('formRef');
+            const formElements = form.elements;
+            let invalidElements = [];
+            for (let i = 0; i < formElements.length; i++) {
+                const element = formElements[i]
+                if ( element.type !== 'submit' && element.clientHeight > 0 && element.clientWidth > 0 ) {
+                    if (!element.checkValidity()) {
+                        invalidElements.push(element);
+                    }
+                }
+            }
+            if (invalidElements.length > 0) {
+                console.log("未通過驗證的元素:", invalidElements);
+                return;
+            }
+
+            try {
+                totalParam.TimeStamp = Math.round(new Date().getTime() / 1000); //時間戮記
+                totalParam.MerchantOrderNo = totalParam.TimeStamp; //商店訂單編號
+
+                const url = `${host}/createOrder`; //後端加密api
+                // return console.log('totalParam', totalParam);
+                const res = await axios.post(url, totalParam); //後端加密
+                if (res.status === 302 || res.request.responseURL) {
+                    window.location.href = res.request.responseURL;
+                }
+            } catch (error) {
+                console.log('Encode Error:', error.message);
+            }
+        };
+
+
+    </script>
+</body>
+
+</html>

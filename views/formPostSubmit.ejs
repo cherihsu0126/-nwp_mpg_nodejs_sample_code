@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="./../public/stylesheets/main.css" />
+    <script type="text/javascript" src="./../public/javascripts/copyCryptoCode.js"></script>
+</head>
+
+<body>
+    <div class="header">
+        <h2>
+            <%= title %>
+        </h2>
+        <a href="https://www.newebpay.com/website/Page/download_file?name=Online Payment-Foreground Scenario API Specification_NDNF-1.0.9.pdf" target="_blank" style="margin-left:20px;">線上交易─幕前支付技術串接手冊_NDNF-1.0.9&nbsp;文件下載</a>
+    </div>
+
+    <div class="main">
+        <div style="display:flex; justify-content: center;">
+            <div class="card">
+                <div class="card-header">
+                    <b>Node.js AES 與 SHA 加密程式範例</b>
+                    <button id="copyCodeBtn" onclick="copyCodeBtn()">複製</button>
+                </div>
+                <pre id="cryptoCode">
+const crypto = require('crypto');
+
+// TradeInfo字串組合
+function dataChain(TradeInfo) {
+    return Object.keys(TradeInfo).map(key => {
+        let value = TradeInfo[key];
+        if (['ItemDesc', 'Email'].includes(key)) {
+            value = encodeURIComponent(value); //特殊字元編碼
+        }
+        return `${key}=${value}`;
+    }).join('&');
+}
+
+// AES 加密
+function aes_encrypt(TradeInfo) {
+    const HASHKEY = TradeInfo.key;
+    const HASHIV = TradeInfo.iv;
+    const cipher = crypto.createCipheriv('aes-256-cbc', HASHKEY, HASHIV);
+    const encrypted = Buffer.concat([ cipher.update( dataChain(TradeInfo),'utf8' ), cipher.final() ]);
+    return encrypted.toString('hex');
+}
+
+// SHA 加密
+function sha_encrypt(aesEncrypt, HASHKEY, HASHIV) {
+    const sha = crypto.createHash('sha256');
+    const plainText = `HashKey=${HASHKEY}&${aesEncrypt}&HashIV=${HASHIV}`;
+    
+    return sha.update(plainText).digest('hex').toUpperCase();
+}
+
+module.exports = {
+    dataChain,
+    aes_encrypt,
+    sha_encrypt,
+};
+                </pre>
+            </div>
+        </div>
+
+        <div style="display:flex; justify-content: center;">
+            <div style="width: 70%; margin-top:30px;">
+                <h3 class="text_center">訂單資料未加密</h3>
+                <div class="text_center">
+                    <textarea name="order" cols="100" rows="5" readonly></textarea>
+                </div>
+            </div>
+        </div>
+        <div style="display:flex; justify-content: center;">
+            <form action="https://ccore.newebpay.com/MPG/mpg_gateway" method="post" style="width: 50%; margin-top:30px;">
+                <h3 class="text_center">加密後交易測試範例</h3>
+                <h4 class="text_center required">※ 為Form POST必傳送項目</h4>
+                <table style="width:100%;">
+                    <tr>
+                        <td style="width:30%;">商店代號：</td>
+                        <td style="width:70%;"><input name="MerchantID" maxlength="15" readonly required><span class="required">※必填</span></td>
+                    </tr>
+                    <tr>
+                        <td style="width:30%;">串接程式版本：</td>
+                        <td style="width:70%;"><input name="Version" maxlength="5" readonly required><span class="required">※必填</span></td>
+                    </tr>
+                    <tr>
+                        <td style="width:30%;">加密交易內容：</td>
+                        <td style="width:70%;"><textarea name="TradeInfo" rows="12" readonly required></textarea><span class="required">※必填</span></td>
+                    </tr>
+                    <tr>
+                        <td style="width:30%;">加密壓碼內容：</td>
+                        <td style="width:70%;"><textarea name="TradeSha" rows="2" readonly required></textarea><span class="required">※必填</span></td>
+                    </tr>
+                </table>
+
+                <div style="display:flex; justify-content:center;">
+                    <input id="sendBtn" type="submit" value="送出交易測試">
+                </div>
+                <a href="/">回支付選擇頁</a>
+            </form>
+        </div>
+    </div>
+    <div class="footer">© 2024 Neweb Technologies Co., Ltd.</div>
+
+    <script>
+
+        let enOrder = {
+            order: {},      //未加密
+            TradeInfo: '',  //加密DATA
+            TradeSha: '',   //加密DATA
+        }
+
+        const href = window.location.href
+        const orderData = href.split('?')[1]
+        const decodeData = decodeURIComponent(orderData);
+
+        if (decodeData) {
+            const parsedData = JSON.parse(decodeData);
+            enOrder = { ...parsedData }
+            let order = JSON.stringify(enOrder.order)
+
+            document.querySelectorAll('textarea[name="order"]')[0].value = order;
+            document.querySelectorAll('input[name="MerchantID"]')[0].value = enOrder.order.MerchantID;
+            document.querySelectorAll('input[name="Version"]')[0].value = enOrder.order.Version;
+            document.querySelectorAll('textarea[name="TradeInfo"]')[0].value = enOrder.TradeInfo;
+            document.querySelectorAll('textarea[name="TradeSha"]')[0].value = enOrder.TradeSha;
+        }
+    </script>
+</body>
+
+</html>

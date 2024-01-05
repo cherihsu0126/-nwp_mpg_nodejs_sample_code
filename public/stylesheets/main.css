@@ -1,0 +1,114 @@
+*{
+    font-family: Noto Sans TC, Arial, Microsoft JhengHei,'Microsoft YaHei', '微软雅黑', "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+body {
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  background-color: #fbfbfb;
+}
+
+a {
+  color: #00B7FF;
+}
+
+h2, h3, h4{
+  margin: 10px 0;
+}
+input {
+    border: 1px solid lightgray;
+    padding: 7px;
+    border-radius: 5px;
+}
+textarea {
+    width: 100%;
+    border: 1px solid lightgray;
+    border-radius: 6px;
+    padding: 10px;
+    box-sizing: border-box;
+    line-height: 1.5;
+}
+
+.header{
+  height: 60px;
+  padding: 5px 20px;
+  box-shadow: 0 4px 3px -2px #dddddd;
+  background-color: #fff;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+.footer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f5f5f5;
+
+  float: left;
+  width: 100%;
+  padding: 20px 0;
+  margin-top: 30px;
+}
+
+table td:first-child{
+    text-align: right;
+}
+
+.text_center{
+  text-align: center;
+}
+.text_left{
+  text-align: left;
+}
+.required:before {
+  content: '※';
+  color: red;
+  margin-right: 5px;
+}
+.block {
+    display: block;
+}
+
+.card{
+    width: 70%;
+    border: 1px solid lightgray;
+    background-color: white;
+    padding: 10px 0 0;
+    border-radius: 6px;
+    margin: 30px;
+    overflow: clip;
+}
+.card-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px 5px;
+}
+pre#cryptoCode {
+    width:100%; 
+    background-color:rgb(54, 55, 58); 
+    color:#d5d5d5; 
+    margin-bottom:0px; 
+    padding: 30px;
+}
+#copyCodeBtn {
+    border: 0;
+    background-color: #fff0;
+}
+#copyCodeBtn:hover {
+    cursor: pointer;
+    background-color: #f5f5f5;
+}
+
+#sendBtn{
+    text-align: center;
+    margin-top: 10px;
+    padding: 10px 22px;
+    background-color: #409eff;
+    color: white;
+    border: 0px;
+}
+#sendBtn:hover{
+    cursor: pointer;
+    background-color: #2183e6;
+}

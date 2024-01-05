@@ -1,0 +1,80 @@
+<% /* global JSON */ %>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title><%= title %></title>
+        <link rel="stylesheet" href="./../public/stylesheets/main.css" />
+        <script type="text/javascript" src="./../public/javascripts/copyCryptoCode.js"></script>
+        <style>
+            .decryptData{
+              background-color: white;
+              padding: 20px;
+              border-radius: 6px;
+              border: 1px solid lightgray;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <h2>
+                <%= title %>
+            </h2>
+            <a href="https://www.newebpay.com/website/Page/download_file?name=Online Payment-Foreground Scenario API Specification_NDNF-1.0.9.pdf" target="_blank" style="margin-left:20px;">線上交易─幕前支付技術串接手冊_NDNF-1.0.9&nbsp;文件下載</a>
+        </div>
+        <div class="main">
+            <div style="display:flex; justify-content: center;">
+                <div class="card">
+                    <div class="card-header">
+                        <b>Node.js AES 解密程式範例</b>
+                        <button id="copyCodeBtn" onclick="copyCodeBtn()">複製</button>
+                    </div>
+                    <pre id="cryptoCode">
+    const crypto = require('crypto');
+    
+    // 將 aes 解密
+    function aes_decrypt(TradeInfo, HASHKEY, HASHIV) {
+        const decrypt = crypto.createDecipheriv('aes256', HASHKEY, HASHIV);
+        decrypt.setAutoPadding(false);
+        const text = decrypt.update(TradeInfo, 'hex', 'utf8');
+        const plainText = text + decrypt.final('utf8');
+        const result = plainText.replace(/[\x00-\x20]+/g, '');
+        return JSON.parse(result);
+    }
+    
+    module.exports = {
+        aes_decrypt
+    };
+                    </pre>
+                </div>
+            </div>
+    
+            <div style="display:flex; justify-content: center;">
+                <div style="width:70%;">
+                    <h3 class="text_center">未解密回傳TradeInfo資訊</h3>
+                    <div class="text_center">
+                        <textarea name="mpgReturnData" cols="100" rows="8" readonly></textarea>
+                    </div>
+                </div>
+            </div>
+    
+            <div style="display:flex; justify-content: center;">
+                <div style="width:70%; margin-top:30px;">
+                    <h3 class="text_center">解密回傳TradeInfo資訊</h3>
+                    <pre class="decryptData"><!-- append --></pre>
+                    <a href="/">回支付選擇頁</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer">© 2024 Neweb Technologies Co., Ltd.</div>
+        <script>
+            const mpgReturnData = JSON.parse('<%- JSON.stringify(nwpReturnData) %>');
+            const decryptData = JSON.stringify(JSON.parse('<%- JSON.stringify(decryptData) %>'), null, 4);
+
+            document.querySelectorAll('textarea[name="mpgReturnData"]')[0].value = mpgReturnData;
+            document.getElementsByClassName('decryptData')[0].innerText = decryptData;
+        </script>
+  </body>
+</html>
